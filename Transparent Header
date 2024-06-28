@@ -1,0 +1,30 @@
+{% if template == 'index' %}
+<style>
+  .header-wrapper {
+    width: 100%;
+    position: absolute;
+    background: transparent;
+    border: none;
+    transition: background-color 0.5s ease;
+}
+  .header-wrapper.scrolled {
+    background: white;
+    /* Any other styles when scrolled */
+}
+</style>
+
+<script>
+  // header
+document.addEventListener('DOMContentLoaded', function () {
+    const header = document.querySelector('.header-wrapper');
+
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > 100) { // Adjust the value as needed
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+});
+</script>
+{% endif %}

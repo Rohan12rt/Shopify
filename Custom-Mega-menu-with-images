@@ -110,7 +110,7 @@
 
 </style>
 
-// make snippit custom-mega-menu
+// make new snippit  ( custom-mega-menu )
 
 <div class="custom-menu">
   <nav class="header_inline-menu">
@@ -228,7 +228,7 @@
 // go to header.liquid  then search settings.menu_type_desktop  and make condition ( elsif section.settings.menu_type_desktop == 'custom' ) then 
   render 'custom-mega-menu' 
 
-and in section settings paste this code
+and in section scheme settings replace code to this
 {
       "type": "select",
       "id": "menu_type_desktop",

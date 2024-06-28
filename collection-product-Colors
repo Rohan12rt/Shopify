@@ -1,164 +1,241 @@
 <style>
-    .inner-content img {
-      width: 100%;
+  .swiper {
+    width: 100%;
+    height: 100%;
+    max-width: 1300px;
   }
-    .custom-featured-collection{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      column-gap:3rem;
-     row-gap: 3rem;
-    }
 
-    .product-sizes{
-      display:flex;
-      column-gap:5px;
-    }
-    .product-sizes li{
-      list-style:none;
-      border:1px solid black;
-      padding:5px 10px;
-    }
-    .product-sizes .active{
-      background:black;
-      color:white;
-      border:2px solid grey;
-      border-radius:5px;
-    }
-    .product-colors {
-      display: flex;
-      column-gap: 10px;
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-    .product-colors p {
-      border: 1px solid;
-      padding: 5px 10px;
+
+  .swiper-slide img {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
   }
-    .product-colors .active{
-      /* background:black;
-      color:white; */
-      border:2px solid grey;
-      border-radius:5px;
-    }
+  .slider-left{
+    margin-left: 100px;
+  }
 </style>
 
-<div class="custom-featured-collection page-width">
-  {% assign collection = collections[section.settings.collection] %}
-  {% for product in collection.products %}
-    <div class="inner-content">
-      <a class="title" href="{{ product.url }}">
-        <img height="300" width="300" class="product-image" src="{{ product.images.first | img_url: 'master' }}">
-      </a>
-      <h3>{{ product.title }}</h3>
-      <!-- product sizes -->
-      <div class="product-sizes">
-        {% assign size_keys = 'Size,size,Sizes,sizes' | split: ',' %}
-        {% for key in size_keys %}
-          {% if product.options contains key %}
-            {% for size_option in product.options_by_name[key].values %}
-              <li class="sizes {% if forloop.first %} active {% endif %}">{{ size_option }}</li>
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-      </div>
-      <!-- end  product sizes -->
-      <!-- product colors -->
-      <div class="product-colors">
-        {% assign color_keys = 'Color,color,Colour,colour' | split: ',' %}
-        {% for key in color_keys %}
-          {% assign option = product.options_with_values | where: 'name', key | first %}
-          {% if option %}
-            {% for color_option in option.values %}
-              {% assign color_variant = product.variants | where: 'option1', color_option | first %}
-              <p
-                data-image="{{ color_variant.image.src | img_url: 'master' }}"
-                id="{{ color_option.id }}"
-                class="colors {% if forloop.first %} active {% endif %}"
-                style="background-color:{{ color_option }}; background:{{ color_option }};"
-              >
-                {{ color_option }}
-              </p>
-              <!-- <img src="{{ color_variant.image.src | img_url: 'small' }}"> -->
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-      </div>
-      <!-- end product colors -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-      <p>{{ product.price | money }}</p>
-    </div>
-  {% endfor %}
+{% assign collection = collections[section.settings.collection] %}
+
+<style>
+      .inner-content img {
+        width: 100%;
+    }
+      /* .custom-featured-collection{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        column-gap:3rem;
+       row-gap: 3rem;
+      } */
+
+      .product-sizes{
+        display:flex;
+        column-gap:5px;
+      }
+      .product-sizes li{
+        list-style:none;
+        border:1px solid black;
+        padding:5px 10px;
+      }
+      .product-sizes .active{
+        background:black;
+        color:white;
+        border:2px solid grey;
+        border-radius:5px;
+      }
+      .product-colors {
+        display: flex;
+        column-gap: 10px;
+    }
+    .product-colors p {
+      border: 1px solid;
+      /* padding: 21px; */
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+  }
+      .product-colors .active{
+        /* background:black;
+        color:white; */
+        border:2px solid grey;
+        /* border-radius:5px; */
+      }
+</style>
+
+
+<div class="custom-featured-collection  swiper  custom-swiper">
+  <div id="custom-swiper-container" class="swiper-wrapper  slider-left">
+    {% for product in collection.products %}
+      <div class="inner-content swiper-slide">
+        <a class="title" href="{{ product.url }}">
+          <img height="300" width="300" class="product-image" src="{{ product.images.first | img_url: 'master' }}">
+        </a>
+        <h3>{{ product.title }}</h3>
+        <!-- product sizes -->
+        <div class="product-sizes">
+          {% assign size_keys = 'Size,size,Sizes,sizes' | split: ',' %}
+          {% for key in size_keys %}
+            {% if product.options contains key %}
+              {% for size_option in product.options_by_name[key].values %}
+                <li class="sizes {% if forloop.first %} active {% endif %}">{{ size_option }}</li>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <!-- end  product sizes -->
+        <!-- product colors -->
+        <div class="product-colors">
+          {% assign color_keys = 'Color,color,Colour,colour' | split: ',' %}
+          {% for key in color_keys %}
+            {% assign option = product.options_with_values | where: 'name', key | first %}
+            {% if option %}
+              {% for color_option in option.values %}
+                {% assign color_variant = product.variants | where: 'option1', color_option | first %}
+                <p
+                  data-title="{{ color_option }}"
+                  data-image="{{ color_variant.image.src | img_url: 'master' }}"
+                  id="id-{{ color_option.id }}"
+                  class=" colors  {% if forloop.first %} active {% endif %}"
+                  style="background-color:{{ color_option }};"
+                >
+                  &nbsp;
+                </p>
+                <!-- <img src="{{ color_variant.image.src | img_url: 'small' }}"> -->
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <!-- end product colors -->
+
+        <p>{{ product.price | money }}</p>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 
 <script>
-      document.addEventListener("DOMContentLoaded",function(){
-        // product sizes code
-       let sizes = document.querySelectorAll(".sizes");
-        sizes.forEach(function(size){
-          size.addEventListener('click',function(){
-            let parent = size.closest('.product-sizes');
-            parent.querySelectorAll('.sizes').forEach(function(s){
-              s.classList.remove('active');
-            })
-            size.classList.add('active');
-          });
-        });
+       document.addEventListener("DOMContentLoaded",function(){
+         // product sizes code
+        let sizes = document.querySelectorAll(".sizes");
+         sizes.forEach(function(size){
+           size.addEventListener('click',function(){
+             let parent = size.closest('.product-sizes');
+             parent.querySelectorAll('.sizes').forEach(function(s){
+               s.classList.remove('active');
+             })
+             size.classList.add('active');
+           });
+         });
 
 
- // Color name to hex code mapping
-  const colorMap = {
-      "red": "#FF0000",
-      "green": "#008000",
-      "blue": "#0000FF",
-      "yellow": "#FFFF00",
-      "black": "#000000",
-      "white": "#FFFFFF",
-      "quiet green": "#d6f0d0",
-      "nectarine": "#fda470",
-      "buttercream": "#f1efdf"
-      // Add more color mappings as needed
-  };
+  // Color name to hex code mapping
+     const colorMap = {
+       "red": "#FF0000",
+       "green": "#008000",
+       "blue": "#0000FF",
+       "yellow": "#FFFF00",
+       "black": "#000000",
+       "white": "#FFFFFF",
+       "quiet green": "#d6f0d0",
+       "nectarine": "#fda470",
+       "buttercream": "#f1efdf"
+       // Add more color mappings as needed
+     };
 
-  // Get all color option elements
-  const colorOptions = document.querySelectorAll('.colors');
+     // Get all color option elements
+     const colorOptions = document.querySelectorAll('.colors');
 
-  // Update background colors
-  colorOptions.forEach(option => {
-      const colorName = option.textContent.trim().toLowerCase();
-      if (colorMap[colorName]) {
-          option.style.backgroundColor = colorMap[colorName];
-      }
-  });
-        
-
-  // Function to update the image based on the active color
-  function updateProductImage(colorOption) {
-      const newImage = colorOption.getAttribute('data-image');
-      const productImage = colorOption.closest('.inner-content').querySelector('.product-image');
-
-      if (newImage) {
-          productImage.setAttribute('src', newImage);
-      } else {
-          productImage.setAttribute('src', productImage.getAttribute('data-default-src'));
-      }
-  }
-
-  // Add click event listeners to all color options
-  colorOptions.forEach(function(colorOption) {
-      colorOption.addEventListener('click', function() {
-          // Update active class
-          const parent = colorOption.closest('.product-colors');
-          parent.querySelectorAll('.colors').forEach(function(c) {
-              c.classList.remove('active');
-          });
-          colorOption.classList.add('active');
-
-          // Update product image
-          updateProductImage(colorOption);
-      });
-  });
-
-
-
-
+     // Update background colors
+     colorOptions.forEach(option => {
+       const colorName = option.dataset.title.toLowerCase();
+       if (colorMap[colorName]) {
+         option.style.backgroundColor = colorMap[colorName];
+       }
      });
+
+
+   // Function to update the image based on the active color
+   function updateProductImage(colorOption) {
+       const newImage = colorOption.getAttribute('data-image');
+       const productImage = colorOption.closest('.inner-content').querySelector('.product-image');
+
+       if (newImage) {
+           productImage.setAttribute('src', newImage);
+       } else {
+           productImage.setAttribute('src', productImage.getAttribute('data-default-src'));
+       }
+   }
+
+   // Add click event listeners to all color options
+   colorOptions.forEach(function(colorOption) {
+       colorOption.addEventListener('click', function() {
+           // Update active class
+           const parent = colorOption.closest('.product-colors');
+           parent.querySelectorAll('.colors').forEach(function(c) {
+               c.classList.remove('active');
+           });
+           colorOption.classList.add('active');
+
+           // Update product image
+           updateProductImage(colorOption);
+       });
+   });
+
+
+
+
+      });
 </script>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+  var swiper = new Swiper(".custom-swiper", {
+    slidesPerView: 4.5,
+    spaceBetween: 20,
+    centeredSlides: false,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+  });
+
+ 
+</script>
+
+{% schema %}
+{
+  "name": "Custom-collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "label": "Add Collection",
+      "id": "collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom-featured-collection"
+    }
+  ]
+}
+{% endschema %}

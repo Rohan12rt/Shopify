@@ -1,0 +1,44 @@
+// make new section
+
+<style>
+  .custom-featured-collection{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    column-gap:3rem;
+  } 
+</style>
+
+<div class="custom-featured-collection page-width">
+  {% assign collection = collections[section.settings.collection] %}
+  {% for product in collection.products %}
+    <div class="inner-content">
+       <a class="title" href="{{ product.url }}">
+          <img height="300" width="300"  class="product-image" src="{{ product.images.first | img_url: 'master' }}" >
+        </a>
+       <h3>{{ product.title }}</h3>
+      <p>{{ product.price | money }}</p>
+    </div>
+   {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Custom-collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "label": "Add Collection",
+      "id": "collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom-featured-collection"
+    }
+  ]
+}

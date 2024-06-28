@@ -1,0 +1,255 @@
+<style>
+  /* custom mega menu */
+   @media only screen and (min-width: 786px) {
+    .header-wrapper {
+      position: relative;
+    }
+  
+    .custom .header_inline-menu {
+      padding: 10px;
+    }
+  
+    .header_inline-menu .list-menu--inline {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+    }
+  
+    .header_inline-menu .header__menu-item {
+      color: black;
+      text-decoration: none;
+      padding: 10px 0px;
+      display: block;
+    }
+  
+    .mega-menu-wrappers {
+      display: none;
+      position: absolute;
+      top: 75%;
+      left: 0;
+      background-color: #fff;
+      width: 100%;
+      /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); */
+      z-index: 1000;
+      border-top:1px solid rgb(221 221 221);
+       /* background-color: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(5px); */
+    }
+  
+    .mega-menu-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+        width: 85%;
+      margin: 0 auto;
+    }
+  
+    .mega-menu-column {
+      padding: 10px;
+      text-align:center;
+    }
+       .mega-menu-list {
+      /* position: relative; */
+      margin-right: 15px;
+    }
+  
+     .menu-item-inner{
+       text-align:left;
+     }
+  
+    .menu-item-inner h3 {
+      margin: 0 0 10px;
+    }
+  
+    .menu-item-inner ul {
+      padding: 0;
+      margin: 0;
+    }
+  
+    .menu-item-inner ul li {
+      margin-bottom: 5px;
+       list-style: none;
+    }
+  
+    .menu-item-inner ul li a {
+      text-decoration: none;
+      color: #333;
+    }
+  
+    .menu-item-inner ul li a:hover {
+      text-decoration: underline;
+    }
+  
+    .image-boxes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+  }
+      .custom-menu .header_menu-item {
+      text-decoration: none;
+  }
+      .megamenu-images {
+      text-align: center;
+      text-transform: capitalize;
+    }
+  
+       .image-boxes a {
+        text-decoration:none;
+      }
+      
+      }
+   
+  @media only screen and (max-width: 786px) {
+    .custom-menu{
+      display:none;
+    }
+  }
+  /* end custom mega menu */
+
+</style>
+
+// make snippit custom-mega-menu
+
+<div class="custom-menu">
+  <nav class="header_inline-menu">
+    <ul class="list-menu list-menu--inline" role="list">
+      {% for link in section.settings.menu.links %}
+        {% assign mega_menu = false %}
+        {% for block in section.blocks %}
+          {% if block.settings.title == link.title %}
+            {% assign mega_menu = true %}
+            <li class="mega-menu-list">
+              <a href="" class="header__menu-item list-menu_item link link--text focus-inset">{{ link.title }}
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="10px" width="10px" version="1.1" id="Layer_1" viewBox="0 0 407.437 407.437" xml:space="preserve">
+                  <polygon points="386.258,91.567 203.718,273.512 21.179,91.567 0,112.815 203.718,315.87 407.437,112.815" />
+                </svg>
+              </a>
+              <div class="mega-menu-wrappers">
+                <div class="mega-menu-row">
+                  {% for child_link in block.settings.linklist.links %}
+                    <div class="mega-menu-column">
+                      <div class="menu-item-inner">
+                        <h3>{{ child_link.title }}</h3>
+                        <ul>
+                          {% for sub_child_link in child_link.links %}
+                            <li><a href="{{ sub_child_link.url }}">{{ sub_child_link.title }}</a></li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                  {% endfor %}
+
+               
+                     <div class="mega-menu-column">
+                       <div class="image-boxes">
+
+                         {% for i in (1..4) %}
+                           {% assign image = "image_" | append: i %}
+                           {% assign caption = "caption_" | append: i %}
+                           {% assign links = "button-link_" | append: i %}
+
+               
+                           {% if block.settings[image] !=blank %}
+                             <a href="{{ block.settings[links] }}">
+                                 <div class="megamenu-images">
+                                <img src="{{ block.settings[image]  | img_url: 'medium'  }}">
+                                   <h3>{{ block.settings[caption] }}</h3>
+                               </div>
+                             </a>
+                             {% endif %}
+                         {% endfor %}
+
+                        {% comment %} 
+                         {% if block.settings.image_1 !=blank %}
+                         <div class="megamenu-images">
+                          <img src="{{ block.settings.image_1 | img_url: 'medium'  }}">
+                         </div>
+                          {% endif %}
+                         {% if block.settings.image_2 !=blank %}
+                             <div class="megamenu-images">
+                               <img src="{{ block.settings.image_2 | img_url: 'medium'  }}">
+                             </div>
+                           {% endif %}
+                         {% if block.settings.image_3 !=blank %}
+                             <div class="megamenu-images">
+                               <img src="{{ block.settings.image_3 | img_url: 'medium'  }}">
+                             </div>
+                           {% endif %}
+                          {% if block.settings.image_4 !=blank %}
+                             <div class="megamenu-images">
+                               <img src="{{ block.settings.image_4 | img_url: 'medium'  }}">
+                             </div>
+                           {% endif %}
+                         {% endcomment %} 
+                         
+                       </div>
+                     </div>
+                  
+                 
+                </div>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+        {% unless mega_menu %}
+          <li class="mega-menu-list">
+            <a href="{{ link.url }}" class="header_menu-item list-menu item link link--text focus-inset">{{ link.title }}</a>
+          </li>
+        {% endunless %}
+      {% endfor %}
+    </ul>
+  </nav>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const menuItems = document.querySelectorAll('.mega-menu-list');
+
+    menuItems.forEach(item => {
+      item.addEventListener('mouseover', function () {
+        const megaMenu = this.querySelector('.mega-menu-wrappers');
+        if (megaMenu) {
+          megaMenu.style.display = 'block';
+        }
+      });
+
+      item.addEventListener('mouseout', function () {
+        const megaMenu = this.querySelector('.mega-menu-wrappers');
+        if (megaMenu) {
+          megaMenu.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
+// go to header.liquid  then search settings.menu_type_desktop  and make condition ( elsif section.settings.menu_type_desktop == 'custom' ) then 
+  render 'custom-mega-menu' 
+
+and in section settings paste this code
+{
+      "type": "select",
+      "id": "menu_type_desktop",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "t:sections.header.settings.menu_type_desktop.options__1.label"
+        },
+        {
+          "value": "mega",
+          "label": "t:sections.header.settings.menu_type_desktop.options__2.label"
+        },
+        {
+          "value": "drawer",
+          "label": "t:sections.header.settings.menu_type_desktop.options__3.label"
+        },{
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "dropdown",
+      "label": "t:sections.header.settings.menu_type_desktop.label",
+      "info": "t:sections.header.settings.menu_type_desktop.info"
+    }

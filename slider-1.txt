@@ -1,0 +1,240 @@
+<style>
+      .value-slider {
+          padding: 10px 0px;
+      }
+      .value-slider .slider-container {
+          display: flex;
+          /* align-items: center; */
+          justify-content: center;
+          margin: 50px 0px;
+        column-gap: 2.25vw;
+      }
+      .value-slider .slider-image {
+          width: 50%;
+          height: 600px;
+        border-radius:12px;
+          overflow: hidden;
+      }
+      .value-slider .swiper-container {
+          height: 100%; /* Make swiper container take full height */
+      }
+      .value-slider .swiper-slide img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+      }
+     .value-slider .slider-content {
+      width: 50%;
+      padding: 10px 20px;
+      background: #f1f0ed;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+       border-radius:12px;
+  }
+      .value-slider .text-content {
+          margin-bottom: 20px;
+          max-height: 350px;
+         overflow-y: auto;
+      }
+    .value-slider .text-content h2{
+      color:rgb(103, 100, 94);
+    }
+
+    .value-slider .text-content p{
+      color:rgb(103, 100, 94);
+    }
+
+
+      .value-slider .buttons-container {
+          display: flex;
+          flex-direction: column;
+          padding:20px;
+      }
+      .value-slider .hover-button {
+      margin:0;
+      padding: 10px 20px;
+      color: #8a8782;
+      cursor: pointer;
+      /* text-align: center; */
+      text-decoration: none;
+      border-top: 1px solid #c4c4c4;
+  }
+      .value-slider .hover-button:hover {
+             color:rgb(103, 100, 94);
+      }
+    .buttons-container .active{
+         color:rgb(103, 100, 94);
+    }
+
+  @media only screen and (max-width: 768px){
+    .value-slider .slider-container {
+          display: block;
+    }
+     .value-slider .slider-image {
+       width:100%;
+     }
+  .value-slider .slider-content {
+       width:100%;
+    margin-top:10px;
+     }
+    .value-slider .buttons-container {
+      padding:0px;
+      margin-top: 20px;
+    }
+
+ .value-slider .text-content {
+    margin-bottom: 20px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+    
+.value-slider .slider-image {
+        width: 100%;
+        pointer-events: none;
+    }
+
+  }
+</style>
+
+<div class="value-slider ">
+  <div class="slider-container">
+    <div class="slider-image">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            <div class="swiper-slide">
+              <img src="{{ block.settings.image | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="slider-content">
+      <div class="text-content">
+        {% for block in section.blocks %}
+          <div
+            class="content"
+            data-slide="{{ forloop.index0 }}"
+            {% unless forloop.first %}
+              style="display:none;"
+            {% endunless %}
+          >
+            <h2>{{ block.settings.title }}</h2>
+            <div class="descr">{{ block.settings.description }}</div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="buttons-container">
+        {% for block in section.blocks %}
+          <h2 class="hover-button {% if forloop.first %}active{% endif %} " data-slide="{{ forloop.index0 }}">
+            {{ block.settings.button_text }}
+          </h2>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      var swiper = new Swiper('.swiper-container', {
+          direction: 'vertical', // Change to vertical
+          slidesPerView: 1,
+          loop: true,
+          autoplay: false, // Disable autoplay
+          speed: 1000, // Adjust speed (in milliseconds)
+          effect: 'slide',
+         allowTouchMove: false
+      });
+      document.querySelectorAll('.hover-button').forEach(function(button) {
+          button.addEventListener('mouseenter', function() {
+              // Remove active class from all buttons
+              document.querySelectorAll('.hover-button').forEach(function(btn) {
+                  btn.classList.remove('active');
+              });
+
+              // Add active class to the hovered button
+              button.classList.add('active');
+
+              var slideIndex = button.getAttribute('data-slide');
+              swiper.slideToLoop(slideIndex);
+
+              // document.querySelectorAll('.content').forEach(function(content) {
+              //     content.style.display = 'none';
+              // });
+              // document.querySelector('.content[data-slide="' + slideIndex + '"]').style.display = 'block';
+
+
+            document.querySelectorAll('.content').forEach(function(content) {
+                content.style.transition = 'opacity 0.9s ease'; // Smooth transition on opacity change
+                content.style.opacity = '0'; // Start with opacity 0 to fade in
+                content.style.display = 'none'; // Hide the element
+            });
+
+            // Fade in the selected slide
+            var selectedContent = document.querySelector('.content[data-slide="' + slideIndex + '"]');
+            if (selectedContent) {
+                selectedContent.style.display = 'block'; // Show the selected element
+                setTimeout(function() {
+                    selectedContent.style.opacity = '1'; // Fade in after a short delay
+                }, 50); // Adjust the delay as needed
+            }
+
+
+          }); 
+      });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Value Slider",
+  "settings": [
+    {
+      "type": "number",
+      "id": "number_of_slides",
+      "label": "Number of Slides",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Value Slider",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}

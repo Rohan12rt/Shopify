@@ -1,0 +1,147 @@
+<div class="myvariant-box">
+  {% if product.variants.size > 1 %}
+    {% for option in product.options_with_values %}
+      {% if option.name == 'Color' %}
+        <div class="variant-color-box">
+          {% for value in option.values %}
+            {% assign color_label = value | replace: ' ', "_" | downcase %}
+            <div class="list-color-var">
+              <span class="collection-color-varaint
+                {% assign compcolor = colordw | replace: ' ', "_" | downcase %}
+                {% if template contains 'collection' %}
+                  {% if compcolor == color_label %}
+                    active
+                  {% endif %}
+                {% else %}
+                  {% if forloop.index == 1 %}
+                    active
+                  {% endif %}
+                {% endif %}
+                " data-url="{{ card_product.url }}" data-value="{{ value }}"
+                {% assign color_group = settings.color_group | split: ',' %}
+                {% for color in color_group %}
+                  {% assign colors = color | strip | split: ':' %}
+                  {% assign color_name = colors.first | replace: ' ', "_" | downcase %}
+                  {% assign color_code = colors.last %}
+                  title="{{ value }}"
+                  {% if color_label == color_name %}
+                    style="background-color: {{ color_code }}"
+                  {% endif %}
+                {% endfor %}
+              ></span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+       {% if option.name == 'Size' %}
+        <div class="variant-size-box">
+          {% for value in option.values %}
+            {% assign size_label = value | replace: ' ', "_" | downcase %}
+            <div class="list-size-var">
+              <span class="collection-size-varaint
+                {% assign compSize = size_selected | replace: ' ', "_" | downcase %}
+                {% if template contains 'collection' %}
+                  {% if compSize == size_label %}
+                    active
+                  {% endif %}
+                {% else %}
+                  {% if forloop.index == 1 %}
+                    active
+                  {% endif %}
+                {% endif %}
+                " data-url="{{ card_product.url }}" data-value="{{ value }}"
+                title="{{ value }}">
+                {{ value }}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</div>
+
+
+
+ <style>
+   /* Container for the color variant options */
+.myvariant-box {
+  margin-top: 20px; /* Adjust the margin as needed */
+}
+
+/* Style for the color variant options container */
+.variant-color-box {
+  display: flex; /* Use flexbox for horizontal alignment */
+  gap: 10px; /* Space between color options */
+  justify-content: right; /* Center the options */
+}
+
+/* Style for each color variant option */
+.list-color-var {
+  display: flex;
+  align-items: center;
+}
+
+.collection-color-varaint {
+  width: 40px; /* Width of the color swatch */
+  height: 40px; /* Height of the color swatch */
+  border-radius: 50%; /* Make it circular */
+  border: 2px solid #ccc; /* Border color for better visibility */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: border-color 0.3s ease; /* Smooth border color transition */
+}
+
+.collection-color-varaint.active {
+  border-color: #000; /* Border color for active state */
+}
+
+.collection-color-varaint:hover {
+  border-color: #333; /* Border color on hover */
+}
+/* Container for the size variant options */
+.myvariant-box {
+  margin-top: 20px; /* Adjust the margin as needed */
+}
+
+/* Style for the size variant options container */
+.variant-size-box {
+  display: flex; /* Use flexbox for horizontal alignment */
+  gap: 10px; /* Space between size options */
+  justify-content: center; /* Center the options */
+}
+
+/* Style for each size variant option */
+.list-size-var {
+  display: flex;
+  align-items: center;
+}
+
+/* Style for the size variant span */
+.collection-size-varaint {
+  padding: 10px 20px; /* Padding for size options */
+  border: 2px solid #ccc; /* Border color for better visibility */
+  border-radius: 4px; /* Slightly rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+  text-align: center; /* Center text */
+  font-size: 14px; /* Font size for size text */
+  font-weight: bold; /* Make text bold */
+  background-color: #fff; /* Default background color */
+  color: #333; /* Default text color */
+}
+
+/* Style for active size variant */
+.collection-size-varaint.active {
+  border-color: #000; /* Border color for active state */
+  background-color: #f0f0f0; /* Background color for active state */
+  color: #000; /* Text color for active state */
+}
+
+/* Style for size variant on hover */
+.collection-size-varaint:hover {
+  border-color: #333; /* Border color on hover */
+  background-color: #e0e0e0; /* Background color on hover */
+  color: #000; /* Text color on hover */
+}
+
+ </style>
